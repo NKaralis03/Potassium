@@ -1,0 +1,42 @@
+PROD(file, statement)
+PROD(file, )
+PROD(statement, function_decl, statement)
+PROD(statement, statementABS, statement)
+PROD(statment, )
+
+PROD(function_decl, returnType, IDENTIFIER, LPAREN, parameters, RPAREN, LBRACKET, statement, RBRACKET)
+PROD(parameters, INTTYPE, parameters)
+PROD(parameters, )
+PROD(statementABS, function_call)
+
+PROD(statementABS, variable)
+PROD(statementABS, if_statement)
+PROD(statementABS, loop_statement)
+PROD(function_call, IDENTIFIER, LPAREN, parameters, RPAREN, SEMICOLON)
+PROD(variable, IDENTIFIER, ASSIGNMENT, expression, SEMICOLON)
+
+PROD(expression, LPAREN, expression, RPAREN)
+PROD(expression, expression, op, expression)
+PROD(expression, factor)
+PROD(op, AMPERSTAND)
+PROD(op, STAR)
+
+PROD(op, PLUS)
+PROD(op, MINUS)
+PROD(op, NOTEQUALITY)
+PROD(op, EQUALITY)
+PROD(op, LESSTHAN)
+
+PROD(op, GREATERTHAN)
+PROD(op, GE)
+PROD(op, LE)
+PROD(factor, IDENTIFIER)
+PROD(factor, INTEGERCONST)
+
+PROD(if_statement, LPAREN, expression, RPAREN, QUESTIONMARK, RBRACKET, statement, RBRACKET, COLON, LBRACKET, statement, RBRACKET)
+PROD(loop_statement, while_statement)
+PROD(loop_statement, for_statement)
+PROD(while_statement, WHILE, LPAREN, expression, RPAREN, LBRACKET, statement, RBRACKET)
+PROD(for_statement, FOR, LPAREN, expression, SEMICOLON, variable, RPAREN, LBRACKET, statement, RBRACKET)
+
+PROD(returnType, INTTYPE)

@@ -8,7 +8,7 @@ namespace Tokens
 {
     enum class TokenType
     {
-// define tokens here dynamically through a macro
+    // define tokens here dynamically through a macro
 #define TOKEN(name, lexeme) name,
 #include "TokenTypes.def"
 #undef TOKEN

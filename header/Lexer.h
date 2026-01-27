@@ -14,7 +14,7 @@ using namespace Tokens;
 class Lexer
 {
 private:
-    static bool isLiteralToken(const std::string &s)
+    static inline bool isLiteralToken(const std::string &s)
     {
         // One character → always literal
         return (s.size() == 1);
