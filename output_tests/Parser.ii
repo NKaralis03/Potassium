@@ -21373,3 +21373,104 @@ Token(TokenType::IDENTIFIER, "[a-zA-Z_][a-zA-Z0-9_]*"),
         };
     };
 }
+constexpr bool TERMINAL_WHILE = true;
+constexpr bool TERMINAL_FOR = true;
+constexpr bool TERMINAL_QUESTIONMARK = true;
+constexpr bool TERMINAL_RPAREN = true;
+constexpr bool TERMINAL_LPAREN = true;
+constexpr bool TERMINAL_LBRACKET = true;
+constexpr bool TERMINAL_RBRACKET = true;
+constexpr bool TERMINAL_AMPERSTAND = true;
+constexpr bool TERMINAL_STAR = true;
+constexpr bool TERMINAL_PLUS = true;
+constexpr bool TERMINAL_MINUS = true;
+constexpr bool TERMINAL_INTTYPE = true;
+constexpr bool TERMINAL_NOTEQUALITY = true;
+constexpr bool TERMINAL_EQUALITY = true;
+constexpr bool TERMINAL_ASSIGNMENT = true;
+constexpr bool TERMINAL_LESSTHAN = true;
+constexpr bool TERMINAL_GREATERTHAN = true;
+constexpr bool TERMINAL_LE = true;
+constexpr bool TERMINAL_GE = true;
+constexpr bool TERMINAL_SEMICOLON = true;
+constexpr bool TERMINAL_COLON = true;
+constexpr bool TERMINAL_NEWLINE = true;
+constexpr bool TERMINAL_WHITESPACE = true;
+constexpr bool TERMINAL_INTEGERCONST = true;
+constexpr bool TERMINAL_IDENTIFIER = true;
+constexpr bool TERMINAL_file = false;
+constexpr bool TERMINAL_file = false;
+constexpr bool TERMINAL_statement = false;
+constexpr bool TERMINAL_statement = false;
+constexpr bool TERMINAL_statment = false;
+constexpr bool TERMINAL_function_decl = false;
+constexpr bool TERMINAL_parameters = false;
+constexpr bool TERMINAL_parameters = false;
+constexpr bool TERMINAL_statementABS = false;
+constexpr bool TERMINAL_statementABS = false;
+constexpr bool TERMINAL_statementABS = false;
+constexpr bool TERMINAL_statementABS = false;
+constexpr bool TERMINAL_function_call = false;
+constexpr bool TERMINAL_variable = false;
+constexpr bool TERMINAL_expression = false;
+constexpr bool TERMINAL_expression = false;
+constexpr bool TERMINAL_expression = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_op = false;
+constexpr bool TERMINAL_factor = false;
+constexpr bool TERMINAL_factor = false;
+constexpr bool TERMINAL_if_statement = false;
+constexpr bool TERMINAL_loop_statement = false;
+constexpr bool TERMINAL_loop_statement = false;
+constexpr bool TERMINAL_while_statement = false;
+constexpr bool TERMINAL_for_statement = false;
+constexpr bool TERMINAL_returnType = false;
+class Parser
+{
+private:
+bool parse_file() { if constexpr (TERMINAL_statement) MATCH(statement); else parse_statement(); return true; }
+bool parse_file() { if constexpr (TERMINAL_) MATCH(); else parse_(); return true; }
+bool parse_statement() { if constexpr (TERMINAL_function_decl) MATCH(function_decl); else parse_function_decl();; if constexpr (TERMINAL_statement) MATCH(statement); else parse_statement(); return true; }
+bool parse_statement() { if constexpr (TERMINAL_statementABS) MATCH(statementABS); else parse_statementABS();; if constexpr (TERMINAL_statement) MATCH(statement); else parse_statement(); return true; }
+bool parse_statment() { if constexpr (TERMINAL_) MATCH(); else parse_(); return true; }
+bool parse_function_decl() { if constexpr (TERMINAL_returnType) MATCH(returnType); else parse_returnType();; if constexpr (TERMINAL_IDENTIFIER) MATCH(IDENTIFIER); else parse_IDENTIFIER();; if constexpr (TERMINAL_LPAREN) MATCH(LPAREN); else parse_LPAREN();; if constexpr (TERMINAL_parameters) MATCH(parameters); else parse_parameters();; if constexpr (TERMINAL_RPAREN) MATCH(RPAREN); else parse_RPAREN();; if constexpr (TERMINAL_LBRACKET) MATCH(LBRACKET); else parse_LBRACKET();; if constexpr (TERMINAL_statement) MATCH(statement); else parse_statement();; if constexpr (TERMINAL_RBRACKET) MATCH(RBRACKET); else parse_RBRACKET(); return true; }
+bool parse_parameters() { if constexpr (TERMINAL_INTTYPE) MATCH(INTTYPE); else parse_INTTYPE();; if constexpr (TERMINAL_parameters) MATCH(parameters); else parse_parameters(); return true; }
+bool parse_parameters() { if constexpr (TERMINAL_) MATCH(); else parse_(); return true; }
+bool parse_statementABS() { if constexpr (TERMINAL_function_call) MATCH(function_call); else parse_function_call(); return true; }
+bool parse_statementABS() { if constexpr (TERMINAL_variable) MATCH(variable); else parse_variable(); return true; }
+bool parse_statementABS() { if constexpr (TERMINAL_if_statement) MATCH(if_statement); else parse_if_statement(); return true; }
+bool parse_statementABS() { if constexpr (TERMINAL_loop_statement) MATCH(loop_statement); else parse_loop_statement(); return true; }
+bool parse_function_call() { if constexpr (TERMINAL_IDENTIFIER) MATCH(IDENTIFIER); else parse_IDENTIFIER();; if constexpr (TERMINAL_LPAREN) MATCH(LPAREN); else parse_LPAREN();; if constexpr (TERMINAL_parameters) MATCH(parameters); else parse_parameters();; if constexpr (TERMINAL_RPAREN) MATCH(RPAREN); else parse_RPAREN();; if constexpr (TERMINAL_SEMICOLON) MATCH(SEMICOLON); else parse_SEMICOLON(); return true; }
+bool parse_variable() { if constexpr (TERMINAL_IDENTIFIER) MATCH(IDENTIFIER); else parse_IDENTIFIER();; if constexpr (TERMINAL_ASSIGNMENT) MATCH(ASSIGNMENT); else parse_ASSIGNMENT();; if constexpr (TERMINAL_expression) MATCH(expression); else parse_expression();; if constexpr (TERMINAL_SEMICOLON) MATCH(SEMICOLON); else parse_SEMICOLON(); return true; }
+bool parse_expression() { if constexpr (TERMINAL_LPAREN) MATCH(LPAREN); else parse_LPAREN();; if constexpr (TERMINAL_expression) MATCH(expression); else parse_expression();; if constexpr (TERMINAL_RPAREN) MATCH(RPAREN); else parse_RPAREN(); return true; }
+bool parse_expression() { if constexpr (TERMINAL_expression) MATCH(expression); else parse_expression();; if constexpr (TERMINAL_op) MATCH(op); else parse_op();; if constexpr (TERMINAL_expression) MATCH(expression); else parse_expression(); return true; }
+bool parse_expression() { if constexpr (TERMINAL_factor) MATCH(factor); else parse_factor(); return true; }
+bool parse_op() { if constexpr (TERMINAL_AMPERSTAND) MATCH(AMPERSTAND); else parse_AMPERSTAND(); return true; }
+bool parse_op() { if constexpr (TERMINAL_STAR) MATCH(STAR); else parse_STAR(); return true; }
+bool parse_op() { if constexpr (TERMINAL_PLUS) MATCH(PLUS); else parse_PLUS(); return true; }
+bool parse_op() { if constexpr (TERMINAL_MINUS) MATCH(MINUS); else parse_MINUS(); return true; }
+bool parse_op() { if constexpr (TERMINAL_NOTEQUALITY) MATCH(NOTEQUALITY); else parse_NOTEQUALITY(); return true; }
+bool parse_op() { if constexpr (TERMINAL_EQUALITY) MATCH(EQUALITY); else parse_EQUALITY(); return true; }
+bool parse_op() { if constexpr (TERMINAL_LESSTHAN) MATCH(LESSTHAN); else parse_LESSTHAN(); return true; }
+bool parse_op() { if constexpr (TERMINAL_GREATERTHAN) MATCH(GREATERTHAN); else parse_GREATERTHAN(); return true; }
+bool parse_op() { if constexpr (TERMINAL_GE) MATCH(GE); else parse_GE(); return true; }
+bool parse_op() { if constexpr (TERMINAL_LE) MATCH(LE); else parse_LE(); return true; }
+bool parse_factor() { if constexpr (TERMINAL_IDENTIFIER) MATCH(IDENTIFIER); else parse_IDENTIFIER(); return true; }
+bool parse_factor() { if constexpr (TERMINAL_INTEGERCONST) MATCH(INTEGERCONST); else parse_INTEGERCONST(); return true; }
+bool parse_if_statement() { statement(LPAREN, expression, RPAREN, QUESTIONMARK, RBRACKET, statement, RBRACKET, COLON, LBRACKET, statement, RBRACKET) return true; }
+bool parse_loop_statement() { if constexpr (TERMINAL_while_statement) MATCH(while_statement); else parse_while_statement(); return true; }
+bool parse_loop_statement() { if constexpr (TERMINAL_for_statement) MATCH(for_statement); else parse_for_statement(); return true; }
+bool parse_while_statement() { if constexpr (TERMINAL_WHILE) MATCH(WHILE); else parse_WHILE();; if constexpr (TERMINAL_LPAREN) MATCH(LPAREN); else parse_LPAREN();; if constexpr (TERMINAL_expression) MATCH(expression); else parse_expression();; if constexpr (TERMINAL_RPAREN) MATCH(RPAREN); else parse_RPAREN();; if constexpr (TERMINAL_LBRACKET) MATCH(LBRACKET); else parse_LBRACKET();; if constexpr (TERMINAL_statement) MATCH(statement); else parse_statement();; if constexpr (TERMINAL_RBRACKET) MATCH(RBRACKET); else parse_RBRACKET(); return true; }
+bool parse_for_statement() { if constexpr (TERMINAL_FOR) MATCH(FOR); else parse_FOR();; if constexpr (TERMINAL_LPAREN) MATCH(LPAREN); else parse_LPAREN();; if constexpr (TERMINAL_expression) MATCH(expression); else parse_expression();; if constexpr (TERMINAL_SEMICOLON) MATCH(SEMICOLON); else parse_SEMICOLON();; if constexpr (TERMINAL_variable) MATCH(variable); else parse_variable();; if constexpr (TERMINAL_RPAREN) MATCH(RPAREN); else parse_RPAREN();; if constexpr (TERMINAL_LBRACKET) MATCH(LBRACKET); else parse_LBRACKET();; if constexpr (TERMINAL_statement) MATCH(statement); else parse_statement();; if constexpr (TERMINAL_RBRACKET) MATCH(RBRACKET); else parse_RBRACKET(); return true; }
+bool parse_returnType() { if constexpr (TERMINAL_INTTYPE) MATCH(INTTYPE); else parse_INTTYPE(); return true; }
+public:
+    static bool Parse();
+};
