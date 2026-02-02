@@ -5,7 +5,9 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/header",
-                "${workspaceFolder}/header/**"
+                "${workspaceFolder}/header/**",
+                "${workspaceFolder}/TokenDir",
+                "${workspaceFolder}/ParserDir"
             ],
             "defines": [
                 "_DEBUG",

@@ -2,7 +2,7 @@ PROD(file, statement)
 PROD(file, )
 PROD(statement, function_decl, statement)
 PROD(statement, statementABS, statement)
-PROD(statment, )
+PROD(statement, )
 
 PROD(function_decl, returnType, IDENTIFIER, LPAREN, parameters, RPAREN, LBRACKET, statement, RBRACKET)
 PROD(parameters, INTTYPE, parameters)

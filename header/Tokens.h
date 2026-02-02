@@ -2,6 +2,7 @@
 #define TOKENS_H
 
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 namespace Tokens
@@ -34,6 +35,7 @@ namespace Tokens
         std::string str;
 
         Token(TokenType type_, std::string str_) : type(type_), str(str_) {}
+        Token() : type(TokenType::AMPERSTAND), str("") {}
     };
 
     struct AvailableTokens
