@@ -21,7 +21,7 @@ private:
     static void CONSUME(ParsingContext &ctx);
 
     template <typename T>
-    static void MATCH(ParsingContext &ctx);
+    static bool MATCH(ParsingContext &ctx);
 
     // Expand function for a single symbol (compile-time dispatch via if constexpr)
     template <typename T>

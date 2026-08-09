@@ -8,7 +8,7 @@ OBJS = $(SRCS:.cpp=.o)
 base: sdiybt objects
 	
 	python3 generate_productions.py
-	$(CPP) $(OBJS) -o test.k
+	$(CPP) $(OBJS) -o potassium
 	
 
 test:

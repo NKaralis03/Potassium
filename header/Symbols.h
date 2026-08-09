@@ -26,20 +26,20 @@ namespace Symbols
 #undef TOKEN
     };
 
-    template <typename S>
+    template <SymbolEnum S>
     struct Symbol
     {
-        static constexpr typename value = S;
+        static constexpr SymbolEnum value = S;
     };
 
 #define SYMBOL(name, ...) \
-    using name = Symbol<typename ::name>;
+    using name = Symbol<SymbolEnum::name>;
 
 #include "SymbolTypes.def"
 #undef SYMBOL
 
 #define TOKEN(name, ...) \
-    using name = Symbol<typename ::name>;
+    using name = Symbol<SymbolEnum::name>;
 
 #include "TokenTypes.def"
 #undef TOKEN
@@ -50,10 +50,10 @@ namespace Symbols
     };
 
 //------DEFINES A STRUCT THAT MARKS ALL TOKENS AS TERMINALS-----//
-#define TOKEN(name, ...)                                 \
-    template <>                                          \
-    struct is_terminal<typename ::name> : std::true_type \
-    {                                                    \
+#define TOKEN(name, ...)                      \
+    template <>                               \
+    struct is_terminal<name> : std::true_type \
+    {                                         \
     };
 #include "TokenTypes.def"
 #undef TOKEN

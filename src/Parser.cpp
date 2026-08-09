@@ -11,7 +11,7 @@ static void CONSUME(ParsingContext &ctx)
 }
 
 template <typename T>
-void Parser::MATCH(ParsingContext &ctx)
+bool Parser::MATCH(ParsingContext &ctx)
 {
     Token currentToken = peek_token(ctx);
 
@@ -23,7 +23,7 @@ void Parser::MATCH(ParsingContext &ctx)
 template <typename T>
 bool inline Parser::EXPAND(ParsingContext &ctx)
 {
-    if (constexpr(is_terminal<T>::value))
+    if constexpr (is_terminal<T>::value)
         return MATCH<T>(ctx);
     else
         return Parse<T>(ctx);

@@ -28,7 +28,7 @@ private:
 
 public:
     // given a fstream, loop through and find
-    static std::vector<Token> Lexify(const std::string &filename)
+    static inline std::vector<Token> Lexify(const std::string &filename)
     {
         std::fstream file(filename);
         if (!file.is_open())
