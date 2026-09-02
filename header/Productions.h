@@ -13,15 +13,22 @@ using namespace Symbols;
 template<>
 struct Productions<expression> {
     using alternatives = std::tuple<
-        std::tuple<LPAREN, expression, RPAREN>,
-        std::tuple<expression, op, expression>,
-        std::tuple<factor>
+        std::tuple<factor, expressions>
+    >;
+};
+
+template<>
+struct Productions<expressions> {
+    using alternatives = std::tuple<
+        std::tuple<op, factor, expressions>,
+        std::tuple<>
     >;
 };
 
 template<>
 struct Productions<factor> {
     using alternatives = std::tuple<
+        std::tuple<LPAREN, expressions, RPAREN>,
         std::tuple<IDENTIFIER>,
         std::tuple<INTEGERCONST>
     >;
@@ -30,7 +37,7 @@ struct Productions<factor> {
 template<>
 struct Productions<file> {
     using alternatives = std::tuple<
-        std::tuple<statement>,
+        std::tuple<statements>,
         std::tuple<>
     >;
 };
@@ -38,7 +45,7 @@ struct Productions<file> {
 template<>
 struct Productions<for_statement> {
     using alternatives = std::tuple<
-        std::tuple<FOR, LPAREN, expression, SEMICOLON, variable, RPAREN, LBRACKET, statement, RBRACKET>
+        std::tuple<FOR, LPAREN, expression, SEMICOLON, variable, RPAREN, LBRACKET, statements, RBRACKET>
     >;
 };
 
@@ -59,7 +66,7 @@ struct Productions<function_decl> {
 template<>
 struct Productions<if_statement> {
     using alternatives = std::tuple<
-        std::tuple<LPAREN, expression, RPAREN, QUESTIONMARK, RBRACKET, statement, RBRACKET, COLON, LBRACKET, statement, RBRACKET>
+        std::tuple<LPAREN, expression, RPAREN, QUESTIONMARK, RBRACKET, statements, RBRACKET, COLON, LBRACKET, statements, RBRACKET>
     >;
 };
 
@@ -88,9 +95,17 @@ struct Productions<op> {
 };
 
 template<>
+struct Productions<parameter> {
+    using alternatives = std::tuple<
+        std::tuple<INTTYPE>
+    >;
+};
+
+template<>
 struct Productions<parameters> {
     using alternatives = std::tuple<
-        std::tuple<INTTYPE, parameters>,
+        std::tuple<parameter, parameters>,
+        std::tuple<NEWLINE, parameters>,
         std::tuple<>
     >;
 };
@@ -105,15 +120,6 @@ struct Productions<returnType> {
 template<>
 struct Productions<statement> {
     using alternatives = std::tuple<
-        std::tuple<function_decl, statement>,
-        std::tuple<statementABS, statement>,
-        std::tuple<>
-    >;
-};
-
-template<>
-struct Productions<statementABS> {
-    using alternatives = std::tuple<
         std::tuple<function_call>,
         std::tuple<variable>,
         std::tuple<if_statement>,
@@ -122,16 +128,27 @@ struct Productions<statementABS> {
 };
 
 template<>
+struct Productions<statements> {
+    using alternatives = std::tuple<
+        std::tuple<function_decl, statements>,
+        std::tuple<statement, statements>,
+        std::tuple<NEWLINE, statements>,
+        std::tuple<>
+    >;
+};
+
+template<>
 struct Productions<variable> {
     using alternatives = std::tuple<
-        std::tuple<IDENTIFIER, ASSIGNMENT, expression, SEMICOLON>
+        std::tuple<IDENTIFIER, ASSIGNMENT, expression, SEMICOLON>,
+        std::tuple<INTTYPE, IDENTIFIER, ASSIGNMENT, expression, SEMICOLON>
     >;
 };
 
 template<>
 struct Productions<while_statement> {
     using alternatives = std::tuple<
-        std::tuple<WHILE, LPAREN, expression, RPAREN, LBRACKET, statement, RBRACKET>
+        std::tuple<WHILE, LPAREN, expression, RPAREN, LBRACKET, statements, RBRACKET>
     >;
 };
 

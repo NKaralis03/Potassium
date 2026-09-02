@@ -4,6 +4,7 @@
 #include "Tokens.h"
 #include "Symbols.h"
 #include "Productions.h"
+#include <iostream>
 using namespace Tokens;
 using namespace Symbols;
 
@@ -13,7 +14,21 @@ struct ParsingContext
     size_t position = 0;
 
     ParsingContext(const std::vector<Token> &tokens_) : tokens(tokens_) {}
+
+    Token CurrentToken()
+    {
+        if (position < tokens.size())
+            return tokens[position];
+        // Return a default-constructed Token when out of range (acts like EOF/sentinel)
+        return Token();
+    }
 };
+
+template <auto T>
+void print_type()
+{
+    std::cout << __PRETTY_FUNCTION__ << '\n';
+}
 
 class Parser
 {
@@ -40,7 +55,17 @@ private:
     {
         using alt = std::tuple_element_t<Idx, Alternatives>;
         constexpr size_t num_symbols = std::tuple_size_v<alt>;
-        return expand_alternative<alt>(std::make_index_sequence<num_symbols>{}, ctx);
+
+        size_t saved_position = ctx.position;
+
+        if (expand_alternative<alt>(
+                std::make_index_sequence<num_symbols>{}, ctx))
+        {
+            return true;
+        }
+
+        ctx.position = saved_position;
+        return false;
     }
 
     // Helper: try all alternatives with backtracking

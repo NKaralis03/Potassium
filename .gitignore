@@ -3,3 +3,10 @@
 
 //Potassium Files
 *.k
+
+//Intermediate Files
+*.ii
+output_tests/*
+
+//Executable
+potassium

@@ -46,10 +46,11 @@ public:
         {
             bool matched = false;
             std::smatch ws;
-            std::regex whitespace(R"(^\s+)");
+            std::regex whitespace(R"(^[ \t]+)");
             if (std::regex_search(contents.begin() + offset, contents.end(), ws, whitespace))
             {
-                offset += ws.size();
+                offset += ws.length(0);
+                continue;
             }
 
             for (auto &token : AvailableTokens::availableTokens)

@@ -6,13 +6,13 @@ namespace Symbols
     enum class SymbolEnum
     {
     // define tokens here dynamically through a macro
-#define SYMBOL(name, ...) name,
-#include "SymbolTypes.def"
-#undef SYMBOL
-
 #define TOKEN(name, ...) name,
 #include "TokenTypes.def"
 #undef TOKEN
+
+#define SYMBOL(name, ...) name,
+#include "SymbolTypes.def"
+#undef SYMBOL
     };
 
     enum class SymbolType

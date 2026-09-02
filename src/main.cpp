@@ -17,7 +17,9 @@ int main(int argc, char **argv)
     }
 
     std::cout << "----- Parsing Stage -----" << std::endl;
-    std::cout << "Parsing " << (Parser::parse(tokens) ? "Succeeded" : "Failed") << std::endl;
+
+    bool succeeded = Parser::parse(tokens);
+    std::cout << "Parsing " << (succeeded ? "Succeeded" : "Failed") << std::endl;
 
     return 0;
 }

@@ -23,6 +23,7 @@ namespace Tokens
         std::string str;
 
         Token(TokenType type_, std::string str_) : type(type_), str(str_) {}
+        Token(const Token &token_) : type(token_.type), str(token_.str) {}
         Token() : type(TokenType::AMPERSTAND), str("") {}
     };
 

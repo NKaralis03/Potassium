@@ -5,14 +5,12 @@ SRCDIRECTORIES = src
 SRCS = $(foreach dir,$(SRCDIRECTORIES),$(wildcard $(dir)/*.cpp))
 OBJS = $(SRCS:.cpp=.o)
 
-base: sdiybt objects
+base: clean generateProds sdiybt objects
 	
-	python3 generate_productions.py
 	$(CPP) $(OBJS) -o potassium
 	
 
-test:
-	python3 generate_productions.py
+test: cleanTest generateProds
 	$(CPP) -E -P $(CPPFLAGS) header/Tokens.h > output_tests/Tokens.ii
 	$(CPP) -E -P $(CPPFLAGS) header/Parser.h > output_tests/Parser.ii
 	
@@ -25,6 +23,12 @@ objects: $(OBJS)
 clean:
 	rm -f $(OBJS)
 
+cleanTest:
+	rm -f output_tests/*.ii
+
+generateProds:
+	python3 generate_productions.py
+
 sdiybt:
-	echo "------Start digging in yo butt twin------"
+	@echo "------Potassium Language Compiler------"
 
