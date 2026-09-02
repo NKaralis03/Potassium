@@ -1,8 +1,8 @@
 CPP = g++
 CPPFLAGS = -Iheader -ITokenDir -IParserDir -Isrc -std=c++17
 
-SRCDIRECTORIES = src
-SRCS = $(foreach dir,$(SRCDIRECTORIES),$(wildcard $(dir)/*.cpp))
+SRCDIRECTORIES = src/**
+SRCS = $(foreach dir,$(SRCDIRECTORIES),$(wildcard $(dir)/*.cpp)) $(wildcard src/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 
 base: clean generateProds sdiybt objects

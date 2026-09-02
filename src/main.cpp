@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "Lexer.h"
-#include "Parser.h"
+#include "Lexer/Lexer.h"
+#include "Parser/Parser.h"
 #include "Tokens.h"
 
 int main(int argc, char **argv)
