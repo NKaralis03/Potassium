@@ -2,6 +2,7 @@
 #define TOKENS_H
 
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 namespace Tokens
@@ -14,19 +15,7 @@ namespace Tokens
 #undef TOKEN
     };
 
-    std::string toString(TokenType type)
-    {
-        switch (type)
-        {
-#define TOKEN(name, lexeme) \
-    case TokenType::name:   \
-        return #name;
-#include "TokenTypes.def"
-#undef TOKEN
-        default:
-            return "UNKNOWN";
-        }
-    }
+    std::string toString(TokenType type);
 
     struct Token
     {
@@ -34,6 +23,8 @@ namespace Tokens
         std::string str;
 
         Token(TokenType type_, std::string str_) : type(type_), str(str_) {}
+        Token(const Token &token_) : type(token_.type), str(token_.str) {}
+        Token() : type(TokenType::AMPERSTAND), str("") {}
     };
 
     struct AvailableTokens

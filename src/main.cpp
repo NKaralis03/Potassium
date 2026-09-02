@@ -11,10 +11,15 @@ int main(int argc, char **argv)
         return 0;
 
     std::vector<Tokens::Token> tokens = Lexer::Lexify(argv[1]);
-    for (int i = 0; i < tokens.size(); ++i)
+    for (Tokens::Token token : tokens)
     {
-        std::cout << Tokens::toString(tokens.at(i).type) << " " << (tokens.at(i).str) << std::endl;
+        std::cout << Tokens::toString(token.type) << " " << (token.str) << std::endl;
     }
+
+    std::cout << "----- Parsing Stage -----" << std::endl;
+
+    bool succeeded = Parser::parse(tokens);
+    std::cout << "Parsing " << (succeeded ? "Succeeded" : "Failed") << std::endl;
 
     return 0;
 }

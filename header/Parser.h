@@ -2,113 +2,92 @@
 #define PARSER_H
 
 #include "Tokens.h"
+#include "Symbols.h"
+#include "Productions.h"
+#include <iostream>
+using namespace Tokens;
+using namespace Symbols;
 
-#define SUCCESS true
-#define FAIL false
+struct ParsingContext
+{
+    std::vector<Token> tokens;
+    size_t position = 0;
 
-// Macro lookup table for terminals
-#define TOKEN(x, ...) constexpr bool TERMINAL_##x = true;
-#include "TokenTypes.def"
-#undef TOKEN
+    ParsingContext(const std::vector<Token> &tokens_) : tokens(tokens_) {}
 
-// Macro lookup for non-terminals
-#define PROD(x, ...) constexpr bool TERMINAL_##x = false;
-#include "Productions.def"
-#undef PROD
+    Token CurrentToken()
+    {
+        if (position < tokens.size())
+            return tokens[position];
+        // Return a default-constructed Token when out of range (acts like EOF/sentinel)
+        return Token();
+    }
+};
 
-#define IS_TERMINAL(x) (TERMINAL_##x)
-
-// Match function
-/*#define MATCH(token)                                   \
-    if (currentToken.type == Tokens::TokenType::token) \
-        consume();                                     \
-    else                                               \
-        return FAIL;
-*/
-
-// Expand function, used in recursive descent
-#define EXPAND(name)               \
-    if constexpr (TERMINAL_##name) \
-        MATCH(name);               \
-    else                           \
-        parse_##name();
-
-// Helper macros for expanding each argument
-#define EXPAND_EACH_1(a) EXPAND(a)
-#define EXPAND_EACH_2(a, b) \
-    EXPAND(a);              \
-    EXPAND(b)
-#define EXPAND_EACH_3(a, b, c) \
-    EXPAND(a);                 \
-    EXPAND(b);                 \
-    EXPAND(c)
-#define EXPAND_EACH_4(a, b, c, d) \
-    EXPAND(a);                    \
-    EXPAND(b);                    \
-    EXPAND(c);                    \
-    EXPAND(d)
-#define EXPAND_EACH_5(a, b, c, d, e) \
-    EXPAND(a);                       \
-    EXPAND(b);                       \
-    EXPAND(c);                       \
-    EXPAND(d);                       \
-    EXPAND(e)
-#define EXPAND_EACH_6(a, b, c, d, e, f) \
-    EXPAND(a);                          \
-    EXPAND(b);                          \
-    EXPAND(c);                          \
-    EXPAND(d);                          \
-    EXPAND(e);                          \
-    EXPAND(f)
-#define EXPAND_EACH_7(a, b, c, d, e, f, g) \
-    EXPAND(a);                             \
-    EXPAND(b);                             \
-    EXPAND(c);                             \
-    EXPAND(d);                             \
-    EXPAND(e);                             \
-    EXPAND(f);                             \
-    EXPAND(g)
-#define EXPAND_EACH_8(a, b, c, d, e, f, g, h) \
-    EXPAND(a);                                \
-    EXPAND(b);                                \
-    EXPAND(c);                                \
-    EXPAND(d);                                \
-    EXPAND(e);                                \
-    EXPAND(f);                                \
-    EXPAND(g);                                \
-    EXPAND(h)
-#define EXPAND_EACH_9(a, b, c, d, e, f, g, h, i) \
-    EXPAND(a);                                   \
-    EXPAND(b);                                   \
-    EXPAND(c);                                   \
-    EXPAND(d);                                   \
-    EXPAND(e);                                   \
-    EXPAND(f);                                   \
-    EXPAND(g);                                   \
-    EXPAND(h);                                   \
-    EXPAND(i)
-
-#define GET_EXPAND_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, NAME, ...) NAME
-#define EXPAND_SEQUENCE(...) \
-    GET_EXPAND_MACRO(__VA_ARGS__, EXPAND_EACH_9, EXPAND_EACH_8, EXPAND_EACH_7, EXPAND_EACH_6, EXPAND_EACH_5, EXPAND_EACH_4, EXPAND_EACH_3, EXPAND_EACH_2, EXPAND_EACH_1)(__VA_ARGS__)
+template <auto T>
+void print_type()
+{
+    std::cout << __PRETTY_FUNCTION__ << '\n';
+}
 
 class Parser
 {
 private:
-// I want to automatically generate production functions from macros
-#define PROD(name, ...)              \
-    bool parse_##name()              \
-    {                                \
-        EXPAND_SEQUENCE(__VA_ARGS__) \
-        return SUCCESS;              \
+    static void CONSUME(ParsingContext &ctx);
+
+    template <typename T>
+    static bool MATCH(ParsingContext &ctx);
+
+    // Expand function for a single symbol (compile-time dispatch via if constexpr)
+    template <typename T>
+    static inline bool EXPAND(ParsingContext &ctx);
+
+    // Helper: expand a single alternative (a tuple of symbols)
+    template <typename SymbolTuple, size_t... I>
+    static bool expand_alternative(std::index_sequence<I...>, ParsingContext &ctx)
+    {
+        return (EXPAND<std::tuple_element_t<I, SymbolTuple>>(ctx) && ...);
     }
 
-#include "Productions.def"
-#undef PROD
+    // Helper: try a specific alternative by index
+    template <typename Alternatives, size_t Idx>
+    static bool try_alternative(ParsingContext &ctx)
+    {
+        using alt = std::tuple_element_t<Idx, Alternatives>;
+        constexpr size_t num_symbols = std::tuple_size_v<alt>;
+
+        size_t saved_position = ctx.position;
+
+        if (expand_alternative<alt>(
+                std::make_index_sequence<num_symbols>{}, ctx))
+        {
+            return true;
+        }
+
+        ctx.position = saved_position;
+        return false;
+    }
+
+    // Helper: try all alternatives with backtracking
+    template <typename Alternatives, size_t... Indices>
+    static bool try_all_alternatives(std::index_sequence<Indices...>, ParsingContext &ctx)
+    {
+        return (try_alternative<Alternatives, Indices>(ctx) || ...);
+    }
+
+    // Main parse function for any non-terminal
+    template <typename NT>
+    static bool Parse(ParsingContext &ctx)
+    {
+        using alts = typename Productions<NT>::alternatives;
+        constexpr size_t num_alts = std::tuple_size_v<alts>;
+        return try_all_alternatives<alts>(std::make_index_sequence<num_alts>{}, ctx);
+    }
 
 public:
-    // Recursive descent parser: Should take in a sequence of tokens, and production rules
-    static bool Parse();
+    static Token peek_token(ParsingContext &ctx);
+    // kicks off the template specializations
+    static bool parse(std::vector<Token> &tokens);
 };
 
 #endif
