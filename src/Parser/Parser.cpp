@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include "AST/AST.h"
 #include <iostream>
 #include <vector>
 #include <cassert>

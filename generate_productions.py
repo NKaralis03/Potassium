@@ -77,7 +77,7 @@ if __name__ == "__main__":
     import sys
     
     input_file = "ParserDir/Productions.def"
-    output_file = "header/Productions.h"
+    output_file = "src/Productions.h"
     
     # Parse the input file
     productions = parse_productions_def(input_file)
