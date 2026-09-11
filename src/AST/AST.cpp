@@ -11,10 +11,19 @@ void DFS(std::function<void(ASTNode *)> action, ASTNode *node)
     action(node);
 }
 
-void AST::push(ASTNode *child) { cursor->children.push_back(child); }
+void AST::push(ASTNode *child) { cursors.top()->children.push_back(child); }
 
-void AST::clean()
+void AST::pushCursor(ASTNode *top) { cursors.push(top); }
+
+void AST::popCursor() { cursors.pop(); }
+
+ASTNode *AST::getCursor() { return cursors.top(); }
+
+void AST::clean(ASTNode *node)
 {
+    if (!node)
+        node = root;
+
     /* Lambda to define the cleaning operation */
     auto cleanLamda = [](ASTNode *node)
     {
@@ -23,6 +32,7 @@ void AST::clean()
 
     /* Clean action over a DFS */
     /* Begin at root */
-    DFS(cleanLamda, root);
-    root = nullptr;
+    DFS(cleanLamda, node);
 }
+
+void AST::clean() { clean(root); }

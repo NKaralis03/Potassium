@@ -2,6 +2,8 @@
 #define AST_H
 
 #include <vector>
+#include "Tokens.h"
+#include <stack>
 #include "SymbolTable/SymbolTable.h"
 
 enum class NODETYPES
@@ -17,7 +19,16 @@ struct ASTNode
     NODETYPES nodeType;
 
     // data type (int, string, etc)
+    int dataType;
+
+    // children
     std::vector<ASTNode *> children;
+
+    explicit ASTNode(Tokens::Token token_, int dataType_ = 0) : dataType(dataType_)
+    {
+        nodeType = NODETYPES::OPERAND;
+    }
+    explicit ASTNode(NODETYPES type_, int dataType_ = 0) : nodeType(type_), dataType(dataType_) {}
 };
 
 class AST
@@ -25,6 +36,10 @@ class AST
 public:
     // Ability to push children given a context
     void push(ASTNode *child);
+
+    void pushCursor(ASTNode *top);
+    void popCursor();
+    ASTNode *getCursor();
 
     // Ability to pop a node and its children as needed
 
@@ -34,13 +49,14 @@ public:
      *           nodes aren't deleted before you access their children
      */
     void clean();
+    void clean(ASTNode *node);
 
 private:
     // The root
     ASTNode *root;
 
     // Current node being looked at
-    ASTNode *cursor;
+    std::stack<ASTNode *> cursors;
 
     /* Symbol table to check if variables exist yet */
     SymbolTable symbolTable;

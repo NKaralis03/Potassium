@@ -3,6 +3,7 @@
 
 #include "Tokens.h"
 #include "Symbols.h"
+#include "AST/AST.h"
 #include "Productions.h"
 #include <iostream>
 using namespace Tokens;
@@ -33,25 +34,25 @@ void print_type()
 class Parser
 {
 private:
-    static void CONSUME(ParsingContext &ctx);
+    static void CONSUME(ParsingContext &ctx, AST *ast);
 
     template <typename T>
-    static bool MATCH(ParsingContext &ctx);
+    static bool MATCH(ParsingContext &ctx, AST *ast);
 
     // Expand function for a single symbol (compile-time dispatch via if constexpr)
     template <typename T>
-    static inline bool EXPAND(ParsingContext &ctx);
+    static bool EXPAND(ParsingContext &ctx, AST *ast);
 
     // Helper: expand a single alternative (a tuple of symbols)
     template <typename SymbolTuple, size_t... I>
-    static bool expand_alternative(std::index_sequence<I...>, ParsingContext &ctx)
+    static bool expand_alternative(std::index_sequence<I...>, ParsingContext &ctx, AST *ast)
     {
-        return (EXPAND<std::tuple_element_t<I, SymbolTuple>>(ctx) && ...);
+        return (EXPAND<std::tuple_element_t<I, SymbolTuple>>(ctx, ast) && ...);
     }
 
     // Helper: try a specific alternative by index
     template <typename Alternatives, size_t Idx>
-    static bool try_alternative(ParsingContext &ctx)
+    static bool try_alternative(ParsingContext &ctx, AST *ast)
     {
         using alt = std::tuple_element_t<Idx, Alternatives>;
         constexpr size_t num_symbols = std::tuple_size_v<alt>;
@@ -59,7 +60,7 @@ private:
         size_t saved_position = ctx.position;
 
         if (expand_alternative<alt>(
-                std::make_index_sequence<num_symbols>{}, ctx))
+                std::make_index_sequence<num_symbols>{}, ctx, ast))
         {
             return true;
         }
@@ -70,24 +71,34 @@ private:
 
     // Helper: try all alternatives with backtracking
     template <typename Alternatives, size_t... Indices>
-    static bool try_all_alternatives(std::index_sequence<Indices...>, ParsingContext &ctx)
+    static bool try_all_alternatives(std::index_sequence<Indices...>, ParsingContext &ctx, AST *ast)
     {
-        return (try_alternative<Alternatives, Indices>(ctx) || ...);
+        return (try_alternative<Alternatives, Indices>(ctx, ast) || ...);
     }
 
     // Main parse function for any non-terminal
     template <typename NT>
-    static bool Parse(ParsingContext &ctx)
+    static bool Parse(ParsingContext &ctx, AST *ast)
     {
         using alts = typename Productions<NT>::alternatives;
         constexpr size_t num_alts = std::tuple_size_v<alts>;
-        return try_all_alternatives<alts>(std::make_index_sequence<num_alts>{}, ctx);
+
+        bool success = try_all_alternatives<alts>(std::make_index_sequence<num_alts>{}, ctx, ast);
+
+        /* If a parsing operation is unsuccessful, then clean */
+        if (!success)
+        {
+            ast->clean(ast->getCursor());
+            ast->popCursor(); // go to previous cursor
+        }
+
+        return success;
     }
 
 public:
     static Token peek_token(ParsingContext &ctx);
     // kicks off the template specializations
-    static bool parse(std::vector<Token> &tokens);
+    static std::tuple<bool, AST *> parse(std::vector<Token> &tokens);
 };
 
 #endif
